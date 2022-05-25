@@ -1,20 +1,18 @@
 import random
 
-#make the card deck and the card box of several card decks
+#make the card deck
 card_deck = []
 suits = "of hearts", "of spades", "of diamonds", "of clubs"
 card_ranks = "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"
 for i in suits:
     for x in card_ranks:
         card_deck.append(f"{x} {i}")
-#print("card deck:", card_deck) #test print
 
 #make the card shoe (=several card decks together)
 amount_of_decks = 4
 card_shoe = []
 for y in range(0, amount_of_decks):
     card_shoe += card_deck
-print("card_shoe:", card_shoe) #test print
 
 #########################
 # functions
@@ -25,11 +23,18 @@ def suffle_the_cards(shoe):
     return random.shuffle(shoe)
 
 def money_to_account():
-    #add money to account
-    return int(input("how much money do you want to load to your game account? "))
+    #adds money to account
+    while ok == False:
+        try:
+            money = int(input("how many euros do you want to add to your game account? "))
+            if money > 0:
+                ok = True
+        except:
+            print("please give a positive integer")
+    return money
 
 ##################################
-# the game
+# the start
 ##################################
 
 #suffle the card shoe
@@ -46,8 +51,9 @@ suffled_cards = suffle_the_cards(card_shoe)
 account = 0
 account += money_to_account()
 
-#luo pelitili
-#lataa pelitilille rahaa
+##################
+# the game
+#################
 
 #aseta pelin panos
 #pelaa
