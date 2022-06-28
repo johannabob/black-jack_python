@@ -100,7 +100,7 @@ print("money in account", account) #test print
 ##################
 # the game
 #################
-
+want_to_continue = True
 while want_to_continue == True:
     #check if account is empty
     if account == 0:
@@ -122,6 +122,8 @@ while want_to_continue == True:
     print(f"Dealers first card {dealers_cards[0]}")
 
     #players game:
+    players_sum = sum_the_cards(players_cards)
+    print(f"the sum of players cards is now {players_sum}")
     while True:
         one_more = input("Do you want another card? y/n ")
         if one_more.lower() == "y":
@@ -136,10 +138,9 @@ while want_to_continue == True:
         elif one_more.lower() == "n":
             break
 
-    print(f"Dealers cards are {dealers_cards[0]}")
-
     #dealers game:
     if players_sum <= 21:
+        print(f"Dealers cards are {dealers_cards}")
         dealers_sum = sum_the_cards(dealers_cards)
         while True:
             if dealers_sum > players_sum and dealers_sum >= 17 and dealers_sum <= 21:
@@ -147,7 +148,11 @@ while want_to_continue == True:
                 #add money logic
                 break
             elif dealers_sum < players_sum and dealers_sum >= 17 and dealers_sum <= 21:
-                print(f"The dealer looses with the sum on {dealers_sum}") 
+                print(f"The dealer looses with the sum of {dealers_sum}") 
+                #add money logic
+                break
+            elif dealers_sum == players_sum and dealers_sum >= 17 and dealers_sum <= 21:
+                print(f"It's a tie. Both have the sum of {dealers_sum}") 
                 #add money logic
                 break
             elif dealers_sum < 17:
@@ -162,13 +167,13 @@ while want_to_continue == True:
 
 
     #after the game, ask if you want to play again
-    again = input("Do you want to play again? y/n")
+    again = input("Do you want to play again? y/n ")
     if again.lower() == "y":
         want_to_continue = True
     elif again.lower() == "n":
         want_to_continue = False
         print("Thanks for playing! Bye!")
-        time.sleep(5) #sleep for 5 seconds before ending the program
+        time.sleep(3) #sleep for 5 seconds before ending the program
         
 
 
