@@ -8,12 +8,15 @@ for i in suits:
     for x in card_ranks:
         card_deck.append(f"{x} {i}")
 
-#make the card shoe (=several card decks together)
-amount_of_decks = 4
-card_shoe = []
-for y in range(0, amount_of_decks):
-    card_shoe += card_deck
+def make_shoe():
+    #make the card shoe (=several card decks together)
+    amount_of_decks = 4
+    new_card_shoe = []
+    for y in range(0, amount_of_decks):
+        new_card_shoe += card_deck
+    return new_card_shoe
 
+card_shoe = make_shoe()
 #########################
 # functions
 ########################
@@ -22,16 +25,56 @@ def suffle_the_cards(shoe):
     #suffles the cards
     return random.shuffle(shoe)
 
-def money_to_account():
+def ask_money_to_account():
     #adds money to account
+    ok = False
     while ok == False:
         try:
             money = int(input("how many euros do you want to add to your game account? "))
             if money > 0:
                 ok = True
+            else:
+                print("please give a positive number")
         except:
             print("please give a positive integer")
     return money
+
+def ask_for_bet(money_in_account):
+    ok = False
+    while ok == False:
+        try:
+            bet = int(input("Place your bet. "))
+            if bet > 0 and bet <= money_in_account:
+                ok = True
+            elif bet > 0 and bet > money_in_account:
+                print(f"You only have {money_in_account} euros to play.")
+            else:
+                print("please give a positive number")
+        except:
+            print("please give a positive integer")
+    return bet
+
+def deal_one_more():
+    #deal one more card
+    try:
+        return card_shoe.pop(0)
+    except:
+        make_shoe()
+        return card_shoe.pop(0)
+
+def sum_the_cards(list_of_cards):
+    sum = 0
+    number_of_aces = 0
+    for i in list_of_cards:
+        if "Jack" in i or "Queen" in i or "King" in i:
+            sum += 10
+        elif "Ace" in i:
+            number_of_aces += 1
+            sum += 11
+            #add the logic of ace being either 1 or 11
+        else:
+            sum += int(i[0])
+    return sum
 
 ##################################
 # the start
@@ -46,18 +89,64 @@ suffled_cards = suffle_the_cards(card_shoe)
 # add this feature later, now only 1 player
 
 ###################
-# money
+# money to playing account
 ###################
 account = 0
-account += money_to_account()
+account += ask_money_to_account()
+
+print("money in account", account) #test print
 
 ##################
 # the game
 #################
 
-#aseta pelin panos
-#pelaa
-#päivitä pelitilin saldo
+#place the bet
+bet = ask_for_bet(account)
+account -= bet
+
+#deal the first cards
+dealers_cards = []
+players_cards = []
+
+players_cards.append(deal_one_more())
+players_cards.append(deal_one_more())
+dealers_cards.append(deal_one_more())
+dealers_cards.append(deal_one_more())
+print(f"Players cards {players_cards}")
+print(f"Dealers first card {dealers_cards[0]}")
+
+#players game:
+while True:
+    one_more = input("Do you want another card? y/n ")
+    if one_more.lower() == "y":
+        players_cards.append(deal_one_more())
+        print(f"Players cards {players_cards}")
+        players_sum = sum_the_cards(players_cards)
+        print(f"the sum of players cards is now {players_sum}")
+        if players_sum > 21:
+            print("The sum of your cards is over 21. You loose.")
+            break
+    elif one_more.lower() == "n":
+        break
+
+print(f"Dealers cards are {dealers_cards[0]}")
+#dealers game:
+if players_sum <= 21:
+    dealers_sum = sum_the_cards(dealers_cards)
+    while True:
+        if dealers_sum > players_sum and dealers_sum >= 17 and dealers_sum <= 21:
+            print(f"The dealer won with the sum on {dealers_sum}") 
+            break
+        elif dealers_sum < 17:
+            dealers_cards.append(deal_one_more())
+            print(f"Dealers cards {dealers_cards}")
+            dealers_sum = sum_the_cards(dealers_cards)
+            print(f"the sum of dealers cards is now {dealers_sum}")
+        elif dealers_sum > 21:
+            print("The sum of dealers cards is over 21. You win.")
+            break
+
+
 #pelin lopuksi kysy pelataanko uudestaan.
 
 # ässä on arvoltaan joko yksi tai yksitoista, 
