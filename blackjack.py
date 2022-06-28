@@ -176,8 +176,7 @@ while want_to_continue == True:
         time.sleep(3) #sleep for 5 seconds before ending the program
         
 
-
-#pelin lopuksi kysy pelataanko uudestaan.
+############################################
 
 # ässä on arvoltaan joko yksi tai yksitoista, 
 # kaikki kuvakortit kymmenen ja 
