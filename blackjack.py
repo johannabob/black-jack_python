@@ -1,4 +1,5 @@
 import random
+import time
 
 #make the card deck
 card_deck = []
@@ -100,51 +101,75 @@ print("money in account", account) #test print
 # the game
 #################
 
-#place the bet
-bet = ask_for_bet(account)
-account -= bet
+while want_to_continue == True:
+    #check if account is empty
+    if account == 0:
+        print("You don't have any money in your playing account. Let's add some.")
+        account += ask_money_to_account()
+    #place the bet
+    bet = ask_for_bet(account)
+    account -= bet
 
-#deal the first cards
-dealers_cards = []
-players_cards = []
+    #deal the first cards
+    dealers_cards = []
+    players_cards = []
 
-players_cards.append(deal_one_more())
-players_cards.append(deal_one_more())
-dealers_cards.append(deal_one_more())
-dealers_cards.append(deal_one_more())
-print(f"Players cards {players_cards}")
-print(f"Dealers first card {dealers_cards[0]}")
+    players_cards.append(deal_one_more())
+    players_cards.append(deal_one_more())
+    dealers_cards.append(deal_one_more())
+    dealers_cards.append(deal_one_more())
+    print(f"Players cards {players_cards}")
+    print(f"Dealers first card {dealers_cards[0]}")
 
-#players game:
-while True:
-    one_more = input("Do you want another card? y/n ")
-    if one_more.lower() == "y":
-        players_cards.append(deal_one_more())
-        print(f"Players cards {players_cards}")
-        players_sum = sum_the_cards(players_cards)
-        print(f"the sum of players cards is now {players_sum}")
-        if players_sum > 21:
-            print("The sum of your cards is over 21. You loose.")
-            break
-    elif one_more.lower() == "n":
-        break
-
-print(f"Dealers cards are {dealers_cards[0]}")
-#dealers game:
-if players_sum <= 21:
-    dealers_sum = sum_the_cards(dealers_cards)
+    #players game:
     while True:
-        if dealers_sum > players_sum and dealers_sum >= 17 and dealers_sum <= 21:
-            print(f"The dealer won with the sum on {dealers_sum}") 
+        one_more = input("Do you want another card? y/n ")
+        if one_more.lower() == "y":
+            players_cards.append(deal_one_more())
+            print(f"Players cards {players_cards}")
+            players_sum = sum_the_cards(players_cards)
+            print(f"the sum of players cards is now {players_sum}")
+            if players_sum > 21:
+                print("The sum of your cards is over 21. You loose.")
+                #add money logic
+                break
+        elif one_more.lower() == "n":
             break
-        elif dealers_sum < 17:
-            dealers_cards.append(deal_one_more())
-            print(f"Dealers cards {dealers_cards}")
-            dealers_sum = sum_the_cards(dealers_cards)
-            print(f"the sum of dealers cards is now {dealers_sum}")
-        elif dealers_sum > 21:
-            print("The sum of dealers cards is over 21. You win.")
-            break
+
+    print(f"Dealers cards are {dealers_cards[0]}")
+
+    #dealers game:
+    if players_sum <= 21:
+        dealers_sum = sum_the_cards(dealers_cards)
+        while True:
+            if dealers_sum > players_sum and dealers_sum >= 17 and dealers_sum <= 21:
+                print(f"The dealer won with the sum on {dealers_sum}") 
+                #add money logic
+                break
+            elif dealers_sum < players_sum and dealers_sum >= 17 and dealers_sum <= 21:
+                print(f"The dealer looses with the sum on {dealers_sum}") 
+                #add money logic
+                break
+            elif dealers_sum < 17:
+                dealers_cards.append(deal_one_more())
+                print(f"Dealers cards {dealers_cards}")
+                dealers_sum = sum_the_cards(dealers_cards)
+                print(f"the sum of dealers cards is now {dealers_sum}")
+            elif dealers_sum > 21:
+                print("The sum of dealers cards is over 21. You win.")
+                #add money logic
+                break
+
+
+    #after the game, ask if you want to play again
+    again = input("Do you want to play again? y/n")
+    if again.lower() == "y":
+        want_to_continue = True
+    elif again.lower() == "n":
+        want_to_continue = False
+        print("Thanks for playing! Bye!")
+        time.sleep(5) #sleep for 5 seconds before ending the program
+        
 
 
 #pelin lopuksi kysy pelataanko uudestaan.
